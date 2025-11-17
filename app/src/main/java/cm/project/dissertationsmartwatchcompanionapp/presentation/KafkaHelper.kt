@@ -22,10 +22,16 @@ object KafkaHelper {
     fun sendReading(readingType: String, value: Int){
         val timestamp=System.currentTimeMillis() *1000 //since we can't get the same measure in nanoseconds (only elapsed)
         val json="""{
-            | "reading_type": "$readingType",
-            | "timestamp_ns": $timestamp,
-            | "value": $value
-            |}""".trimMargin()
+            | "records": [
+            | {
+            |   "value": {
+            |       "reading_type":"$readingType",
+            |       "timestamp_ns":$timestamp,
+            |       "value":$value
+            |   }
+            | }
+            | ]
+        }""".trimMargin()
 
         val requestBody=json.toRequestBody("application/vnd.kafka.json.v2+json".toMediaTypeOrNull())
 
@@ -42,7 +48,7 @@ object KafkaHelper {
             override fun onResponse(call: Call, response: Response) {
                 response.use {
                     if (!response.isSuccessful) {
-                        Log.d("KAFKA-REST","Response failed: ${response.code}")
+                        Log.d("KAFKA-REST","Response failed: ${response.body?.string()}")
                     } else {
                         Log.d("KAFKA-REST","Response success: ${response.body?.string()}")
                     }
