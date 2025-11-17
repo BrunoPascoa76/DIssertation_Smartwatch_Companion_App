@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
             )
         }
 
-        KafkaHelper.initProducer("192.168.1.108:9094") //hardcoded for now but will later be sent via BT Low Energy
+        KafkaHelper.initProducer("http://192.168.1.108:8082") //hardcoded for now but will later be sent via BT Low Energy
 
         // Centered TextView
         bpmText = TextView(this).apply {

@@ -1,5 +1,6 @@
 package cm.project.dissertationsmartwatchcompanionapp.presentation
 
+import android.util.Log
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -18,7 +19,7 @@ object KafkaHelper {
         this.client=OkHttpClient()
     }
 
-    fun sendReading(brokerURL:String,readingType: String, value: Int){
+    fun sendReading(readingType: String, value: Int){
         val timestamp=System.currentTimeMillis() *1000 //since we can't get the same measure in nanoseconds (only elapsed)
         val json="""{
             | "reading_type": "$readingType",
@@ -41,9 +42,9 @@ object KafkaHelper {
             override fun onResponse(call: Call, response: Response) {
                 response.use {
                     if (!response.isSuccessful) {
-                        println("Response failed: ${response.code}")
+                        Log.d("KAFKA-REST","Response failed: ${response.code}")
                     } else {
-                        println("Response success: ${response.body?.string()}")
+                        Log.d("KAFKA-REST","Response success: ${response.body?.string()}")
                     }
                 }
             }
@@ -51,7 +52,5 @@ object KafkaHelper {
 
     }
 
-    fun close(){
-        client?.clo
-    }
+    fun close(){} //just to keep the same interface
 }
